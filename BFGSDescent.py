@@ -32,7 +32,7 @@ import WolfePowellSearch as WP
 
 def matrnr():
     # set your matriculation number here
-    matrnr = 0
+    matrnr = 23423928
     return matrnr
 
 
@@ -48,9 +48,19 @@ def BFGSDescent(f, x0: np.array, eps=1.0e-3, verbose=0):
     n = x0.shape[0]
     E = np.eye(n)
     B = E
-    # INCOMPLETE CODE STARTS
 
-    # INCOMPLETE CODE ENDS
+    while np.linalg.norm(f.gradient(x)) > eps :
+        d = -B @ f.gradient(x)
+        if f.gradient(x).T @ d:
+            d = -f.gradient(x)
+            B = E
+        t_k = WP.WolfePowellSearch(f,x,d)
+        delta_g = f.gradient(x+t_k*d) - f.gradient(x)
+        delta_x = t_k * d
+        x = x + t_k * d
+        if delta_g.T @ delta_x <= 0:
+            B = E
+
     if verbose:
         gradx = f.gradient(x)
         print('BFGSDescent terminated after ', countIter, ' steps with norm of gradient =', np.linalg.norm(gradx), 'and the inverse BFGS matrix is')

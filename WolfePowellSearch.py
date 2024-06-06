@@ -50,7 +50,7 @@ import numpy as np
 
 def matrnr():
     # set your matriculation number here
-    matrnr = 0
+    matrnr = 23423928
     return matrnr
 
 
@@ -80,10 +80,35 @@ def WolfePowellSearch(f, x: np.array, d: np.array, sigma=1.0e-3, rho=1.0e-2, ver
         return isWP2
 
     t = 1
-    # INCOMPLETE CODE STARTS
 
-    # INCOMPLETE CODE ENDS
+    if WP1(f.objective(x + t * d) , t) == False :
+        t = t / 2
+        while WP1(f.objective(x + t * d) , t) == False:
+            t = t / 2
+        t_minus = t 
+        t_plus = 2 * t
+    
+    elif WP2(f.gradient(x + t * d)) == True :
+        return t
+    
+    else:
+        t = 2 * t
+        while WP1(f.objective(x + t * d) , t) == True :
+            t = 2 * t
+            t_minus = t / 2
+            t_plus = t
 
+    t = t_minus
+
+    while WP2(f.gradient(x + t * d)) == False :
+        t = (t_minus + t_plus) / 2
+        if WP1(f.objective(x + t * d) , t) == True :
+            t_minus = t
+        else:
+            t_plus = t
+
+    t = t_minus
+    
     if verbose:
         xt = x + t * d
         fxt = f.objective(xt)
