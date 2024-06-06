@@ -51,7 +51,27 @@ def PrecCGSolver(A: np.array, b: np.array, delta=1.0e-6, verbose=0):
     L = IC.incompleteCholesky(A)
     x = LLT.LLTSolver(L, b)
     r = A @ x - b
-    p = z
+    d = -LLT.LLTSolver(L, r)
+    while np.linalg.norm(r) > delta :
+        countIter = countIter +1
+        d_tilda = A @ d
+        row_j = d.T @ d_tilda
+        t_j = r.T @ LLT.LLTSolver(L, r) / row_j
+        x = x + t_j * d
+        r_o = r
+        r = r_o + t_j * d_tilda
+        beta_j = (r.T @ LLT.LLTSolver(L, r)) / (r_o.T @ LLT.LLTSolver(L, r_o))
+        d = -LLT.LLTSolver(L, r) + beta_j * d
+
+    if verbose:
+        print('precCGSolver terminated after ', countIter, ' steps with norm of residual being ', np.linalg.norm(r))
+
+    return x
+
+
+
+'''
+p = z
     r_dot_z = np.dot(r, z)
     norm_r = np.linalg.norm(r)
     
@@ -73,8 +93,4 @@ def PrecCGSolver(A: np.array, b: np.array, delta=1.0e-6, verbose=0):
         norm_r = np.linalg.norm(r)
         
         countIter += 1
-
-    if verbose:
-        print('precCGSolver terminated after ', countIter, ' steps with norm of residual being ', np.linalg.norm(r))
-
-    return x
+'''

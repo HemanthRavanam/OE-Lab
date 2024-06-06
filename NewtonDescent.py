@@ -45,9 +45,11 @@ def NewtonDescent(f, x0: np.array, eps=1.0e-3, verbose=0):
     countIter = 0
     x = x0
 
-    # INCOMPLETE CODE STARTS
-
-    # INCOMPLETE CODE ENDS
+    while np.linalg.norm (f.gradient(x)) > eps :
+        B_k = f.hessian(x)
+        d_k = PCG.PrecCGSolver(B_k, -f.gradient(x))
+        t_k = 1
+        x = x + t_k * d_k
 
     if verbose:
         gradx = f.gradient(x)
