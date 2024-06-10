@@ -35,7 +35,7 @@ import PrecCGSolver as PCG
 
 def matrnr():
     # set your matriculation number here
-    matrnr = 0
+    matrnr = 23423928
     return matrnr
 
 
@@ -54,8 +54,26 @@ def levenbergMarquardtDescent(R, p0: np.array, eps=1.0e-4, alpha0=1.0e-3, beta=1
 
     countIter = 0
     p = p0
+    
 
     # INCOMPLETE CODE STARTS
+
+    jacobian=R.jacobian(p)
+    residual=R.residual(p)
+    alpha = alpha0
+
+    while np.linalg.norm(jacobian.T @ residual) > eps:
+        d = PCG.PrecCGSolver(jacobian.T @ jacobian + (alpha*np.eye(len(p))), -jacobian.T @ residual)
+
+        if 0.5 * R.residual(p + d).T @ R.residual(p + d) < 0.5 * R.residual(p).T @ R.residual(p) :
+            p = p + d
+            alpha = alpha0
+        
+        else:
+            alpha = beta * alpha
+    
+        jacobian=R.jacobian(p)
+        residual=R.residual(p)
 
 
     # INCOMPLETE CODE ENDS
