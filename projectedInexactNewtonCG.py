@@ -37,7 +37,7 @@ import projectedHessApprox as PHA
 
 def matrnr():
     # set your matriculation number here
-    matrnr = 0
+    matrnr = 23423928
     return matrnr
 
 
@@ -51,9 +51,9 @@ def projectedInexactNewtonCG(f, P, x0: np.array, eps=1.0e-3, verbose=0):
 
     countIter = 0
     xp = P.project(x0)
-    # INCOMPLETE CODE STARTS
+    
+    
 
-    # INCOMPLETE CODE ENDS
     if verbose:
         gradx = f.gradient(xp)
         stationarity = np.linalg.norm(xp - P.project(xp - gradx))

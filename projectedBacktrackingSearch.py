@@ -35,7 +35,7 @@ import numpy as np
 
 def matrnr():
     # set your matriculation number here
-    matrnr = 0
+    matrnr = 23423928
     return matrnr
 
 
@@ -55,12 +55,41 @@ def projectedBacktrackingSearch(f, P, x: np.array, d: np.array, sigma=1.0e-4, ve
 
     beta = 0.5
     t = 1
-    # INCOMPLETE CODE STARTS
 
+    def WP1(ft, fx, P, s):
+        isWP1 = ft <= fx - s * sigma * (2 * np.linalg.norm(x - P.project(x - t * f.gradient(x))))
+        return isWP1
 
-    # INCOMPLETE CODE ENDS
+    fx = f.objective(xp)
+    
+    while not WP1(f.objective(P.project(x + t * d)), fx, P, t):
+        t = t / 2
+    
 
     if verbose:
-        print('projectedBacktrackingSearch terminated with t=', t)
+        print('projectedBacktrackingSearch terminated with t=', t) 
 
     return t
+
+'''
+(sigma*np.linalg.norm(x-P(x-t*f.gradient(x)))^^2*descent)
+'''
+
+'''
+ def WP1(ft, fx, P, s):
+        isWP1 = ft <= fx - s * sigma * 2^np.linalg.norm(x-P(x-t * f.gradient(x))) * descent
+        return isWP1
+
+    while WP1(f.objective(P * (x + (t * d)) , t) == False:
+        t = t / 2
+        
+'''
+'''
+def WP1(ft, fx, P, s):
+        isWP1 = ft <= fx - s * sigma * 2^np.linalg.norm(x-P(x-t * f.gradient(x)))
+        return isWP1
+
+    while WP1(f.objective(int(P * (x + (t * d)) , t)) == False:
+        t = t / 2
+
+'''
