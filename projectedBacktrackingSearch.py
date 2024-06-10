@@ -57,7 +57,7 @@ def projectedBacktrackingSearch(f, P, x: np.array, d: np.array, sigma=1.0e-4, ve
     t = 1
 
     def WP1(ft, fx, P, s):
-        isWP1 = ft <= fx - s * sigma * (2 * np.linalg.norm(x - P.project(x - t * f.gradient(x))))
+        isWP1 = ft <= fx - s * sigma * np.square(np.linalg.norm(x - P.project(x - t * f.gradient(x))))
         return isWP1
 
     fx = f.objective(xp)
@@ -92,4 +92,43 @@ def WP1(ft, fx, P, s):
     while WP1(f.objective(int(P * (x + (t * d)) , t)) == False:
         t = t / 2
 
+'''
+'''
+cfail = False
+
+    intterm = xp - P.project(xp - f.gradient(xp))
+
+    minval = np.min((0.5,(np.sqrt(np.linalg.norm(intterm)))))
+    n = (minval) * np.linalg.norm(intterm)
+
+    while np.linalg.norm(intterm) > eps :
+        xj = xp
+        rj = f.gradient(xj)
+        dj = -rj
+
+        while np.linalg.norm(rj) > n :
+            dH = PHA.projectedHessApprox(f, P, xp, dj)
+            rho_j = dj.T @ dH
+            if rho_j <= eps * np.square(np.linalg.norm(dj)):
+                cfail = True
+                break
+            tj = np.square(np.linalg.norm(rj))/rho_j
+            xj = xj + (tj * dj)
+            r_old = rj
+            rj = r_old + (tj * dH)
+            beta_j = np.square((np.linalg.norm(rj))/(np.linalg.norm(r_old)))
+            dj = -rj + (beta_j * dj)
+
+        if not cfail:
+            dk = xj - xp
+        else:
+            dk = -f.gradient(xj)
+
+        tk = PB.projectedBacktrackingSearch(f, P, xp, dk)
+        xp = P.project(xp + (tk * dk))
+
+        intterm = xp - P.project(xp - f.gradient(xp))
+
+        minval = np.min((0.5,(np.sqrt(np.linalg.norm(intterm)))))
+        n = (minval) * np.linalg.norm(intterm)
 '''
