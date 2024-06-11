@@ -51,8 +51,8 @@ class leastSquaresModel:
 
         # INCOMPLETE CODE STARTS
         for i in range(self.N):
-            val = self.model.objective(self.xData[:, i].reshape(self.n, 1))
-            myResidual[i,:] = val - self.fData[:,i]
+            value = self.model.objective(self.xData[:, i].reshape(self.n, 1))
+            myResidual[i,:] = value - self.fData[:,i]
 
         # INCOMPLETE CODE ENDS
 
@@ -64,8 +64,8 @@ class leastSquaresModel:
 
         # INCOMPLETE CODE STARTS
         for i in range (self.N):
-            grad = self.model.parameterGradient(self.xData[:,i].reshape(self.n,1))
-            myJacobian[i,:] = grad.T
+            gradient = self.model.parameterGradient(self.xData[:,i].reshape(self.n,1))
+            myJacobian[i,:] = gradient.T
 
         # INCOMPLETE CODE ENDS
 
