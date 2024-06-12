@@ -74,6 +74,22 @@ def augmentedLagrangianDescent(f, P, h, x0: np.array, alpha0=0, eps=1.0e-3, delt
     myAugmentedObjective = AO.augmentedLagrangianObjective(f, h, alphak, gammak)
 
     # INCOMPLETE CODE STARTS
+     
+    while np.linalg.norm(xp - P.project(xp - myAugmentedObjective.gradient(xp))) > eps or np.linalg.norm(h.objective(xp)) > delta :
+        PCG.projectedInexactNewtonCG(myAugmentedObjective, P, xp, epsk)
+
+        if np.linalg.norm(h.objective(xp)) <= deltak :
+            alphak = alphak + gammak * h.objective(xp)
+            epsk = max(epsk / gammak, eps)
+            deltak = max(deltak / gammak**0.9, delta)
+        else:
+            gammak = max(10, np.sqrt(gammak)) * gammak
+            epsk = 1 / gammak
+            deltak = 1 / gammak**0.1
+
+        myAugmentedObjective = AO.augmentedLagrangianObjective(f, h, alphak, gammak)
+
+    countIter = countIter + 1
 
     # INCOMPLETE CODE ENDS
     if verbose:
@@ -82,3 +98,21 @@ def augmentedLagrangianDescent(f, P, h, x0: np.array, alpha0=0, eps=1.0e-3, delt
         print('augmentedLagrangianDescent terminated after ', countIter, ' steps with feasibility =', feasibility, ' and stationarity = ', stationarity)
 
     return [xp, alphak]
+
+'''
+while np.linalg.norm(xp - P.project(xp - myAugmentedObjective.gradient(xp))) > eps or np.linalg.norm(h.objective(xp)) > delta :
+        PCG.projectedInexactNewtonCG(myAugmentedObjective, P, xp, epsk)
+
+        if np.linalg.norm(h.objective(xp)) <= deltak :
+            alphak = alphak + gammak * h.objective(xp)
+            epsk = max(epsk / gammak, eps)
+            deltak = max(deltak / gammak**0.9, delta)
+        else:
+            gammak = max(10, np.sqrt(gammak)) * gammak
+            epsk = 1 / gammak
+            deltak = 1 / gammak**0.1
+
+        myAugmentedObjective = AO.augmentedLagrangianObjective(f, h, alphak, gammak)
+
+    countIter = countIter + 1
+'''
