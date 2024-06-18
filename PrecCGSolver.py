@@ -55,8 +55,8 @@ def PrecCGSolver(A: np.array, b: np.array, delta=1.0e-6, verbose=0):
     while np.linalg.norm(r) > delta :
         countIter = countIter +1
         d_tilda = A @ d
-        row_j = d.T @ d_tilda
-        t_j = r.T @ LLT.LLTSolver(L, r) / row_j
+        rho_j = d.T @ d_tilda
+        t_j = r.T @ LLT.LLTSolver(L, r) / rho_j
         x = x + t_j * d
         r_o = r
         r = r_o + t_j * d_tilda
