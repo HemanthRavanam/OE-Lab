@@ -49,21 +49,29 @@ def BFGSDescent(f, x0: np.array, eps=1.0e-3, verbose=0):
     E = np.eye(n)
     B = E
 
+
     while np.linalg.norm(f.gradient(x)) > eps :
         d = -B @ f.gradient(x)
-        if f.gradient(x).T @ d:
+        if f.gradient(x).T @ d >= 0:
             d = -f.gradient(x)
             B = E
         t_k = WP.WolfePowellSearch(f,x,d)
-        delta_g = f.gradient(x+t_k*d) - f.gradient(x)
+        delta_g = f.gradient(x+t_k * d) - f.gradient(x)
         delta_x = t_k * d
         x = x + t_k * d
         if delta_g.T @ delta_x <= 0:
             B = E
+        else :
+            rk = delta_x -B @ delta_g
+            B += ((rk @ delta_x.T + delta_x @ rk.T) / (delta_g.T @ delta_x)) - ((rk.T @ delta_g) / (np.square(delta_g.T @ delta_x))) * (delta_x @ delta_x.T)
+ 
+        countIter = countIter + 1
 
+        
     if verbose:
         gradx = f.gradient(x)
         print('BFGSDescent terminated after ', countIter, ' steps with norm of gradient =', np.linalg.norm(gradx), 'and the inverse BFGS matrix is')
         print(B)
 
     return x
+

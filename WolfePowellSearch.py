@@ -80,7 +80,8 @@ def WolfePowellSearch(f, x: np.array, d: np.array, sigma=1.0e-3, rho=1.0e-2, ver
         return isWP2
 
     t = 1
-
+    t_minus = 0
+    t_plus = 0
     if WP1(f.objective(x + t * d) , t) == False :
         t = t / 2
         while WP1(f.objective(x + t * d) , t) == False:
@@ -95,8 +96,8 @@ def WolfePowellSearch(f, x: np.array, d: np.array, sigma=1.0e-3, rho=1.0e-2, ver
         t = 2 * t
         while WP1(f.objective(x + t * d) , t) == True :
             t = 2 * t
-            t_minus = t / 2
-            t_plus = t
+        t_minus = t / 2
+        t_plus = t
 
     t = t_minus
 
