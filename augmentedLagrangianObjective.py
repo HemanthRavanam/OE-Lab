@@ -58,7 +58,7 @@ class augmentedLagrangianObjective:
         myObjective = self.f.objective(x)
         # INCOMPLETE CODE STARTS
         
-        myObjective += (self.alpha * self.h.objective(x)) + (0.5 * self.gamma) * (self.h.objective(x)**2) 
+        myObjective += (self.alpha * self.h.objective(x)) + (0.5 * self.gamma) * np.square(self.h.objective(x)) 
         
         # INCOMPLETE CODE ENDS
 

@@ -76,7 +76,7 @@ def augmentedLagrangianDescent(f, P, h, x0: np.array, alpha0=0, eps=1.0e-3, delt
     # INCOMPLETE CODE STARTS
      
     while np.linalg.norm(xp - P.project(xp - myAugmentedObjective.gradient(xp))) > eps or np.linalg.norm(h.objective(xp)) > delta :
-        PCG.projectedInexactNewtonCG(myAugmentedObjective, P, xp, epsk)
+        xp = PCG.projectedInexactNewtonCG(myAugmentedObjective, P, xp, epsk)
 
         if np.linalg.norm(h.objective(xp)) <= deltak :
             alphak = alphak + gammak * h.objective(xp)
