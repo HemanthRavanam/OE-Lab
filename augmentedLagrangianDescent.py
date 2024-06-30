@@ -89,7 +89,7 @@ def augmentedLagrangianDescent(f, P, h, x0: np.array, alpha0=0, eps=1.0e-3, delt
 
         myAugmentedObjective = AO.augmentedLagrangianObjective(f, h, alphak, gammak)
 
-    countIter = countIter + 1
+        countIter = countIter + 1
 
     # INCOMPLETE CODE ENDS
     if verbose:

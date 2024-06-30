@@ -75,6 +75,7 @@ def levenbergMarquardtDescent(R, p0: np.array, eps=1.0e-4, alpha0=1.0e-3, beta=1
         Jacobian=R.jacobian(p)
         Residual=R.residual(p)
 
+        countIter = countIter +1
 
     # INCOMPLETE CODE ENDS
     if verbose:
