@@ -89,6 +89,8 @@ def projectedInexactNewtonCG(f, P, x0: np.array, eps=1.0e-3, verbose=0):
 
         minval = np.min((0.5,(np.sqrt(np.linalg.norm(intterm)))))
         n = (minval) * np.linalg.norm(intterm)
+
+        countIter = countIter +1
     # INCOMPLETE CODE ENDS
     if verbose:
         gradx = f.gradient(xp)

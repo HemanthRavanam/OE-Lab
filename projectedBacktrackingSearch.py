@@ -56,16 +56,14 @@ def projectedBacktrackingSearch(f, P, x: np.array, d: np.array, sigma=1.0e-4, ve
     beta = 0.5
     t = 1
 
-    def WP1(ft, fx, P, s):
-        isWP1 = ft <= fx - s * sigma * np.square(np.linalg.norm(x - P.project(x - t * f.gradient(x))))
+    def WP1(x, t):
+        isWP1 = f.objective(P.project(x+t*d)) <= \
+            f.objective(x) - (sigma/t) * np.square(np.linalg.norm(x - P.project(x - t * f.gradient(x))))
         return isWP1
-
-    fx = f.objective(xp)
     
-    while not WP1(f.objective(P.project(x + t * d)), fx, P, t):
-        t = t / 2
-    
-
+    while WP1(x, t) == False:
+        t = t/2
+        
     if verbose:
         print('projectedBacktrackingSearch terminated with t=', t) 
 
@@ -73,6 +71,15 @@ def projectedBacktrackingSearch(f, P, x: np.array, d: np.array, sigma=1.0e-4, ve
 
 '''
 (sigma*np.linalg.norm(x-P(x-t*f.gradient(x)))^^2*descent)
+
+ isWP1 = ft <= fx - s * sigma * np.square(np.linalg.norm(x - P.project(x - t * f.gradient(x))))
+        return isWP1
+
+    fx = f.objective(xp)
+    
+    while not WP1(f.objective(P.project(x + t * d)), fx, P, t):
+        t = t / 2
+
 '''
 
 '''
