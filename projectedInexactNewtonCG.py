@@ -53,6 +53,7 @@ def projectedInexactNewtonCG(f, P, x0: np.array, eps=1.0e-3, verbose=0):
     xp = P.project(x0)
     # INCOMPLETE CODE STARTS
     cfail = False
+    veryfirsttry = False
 
     intterm = xp - P.project(xp - f.gradient(xp))
 
@@ -67,27 +68,33 @@ def projectedInexactNewtonCG(f, P, x0: np.array, eps=1.0e-3, verbose=0):
         while np.linalg.norm(rj) > n :
             dH = PHA.projectedHessApprox(f, P, xp, dj)
             rho_j = dj.T @ dH
+
             if rho_j <= eps * np.square(np.linalg.norm(dj)):
-                cfail = True
+                cfail = True   
+
+                if countIter == 0:
+                    veryfirsttry = True
                 break
+
             tj = np.square(np.linalg.norm(rj))/rho_j
             xj = xj + (tj * dj)
             r_old = rj
             rj = r_old + (tj * dH)
-            beta_j = np.square((np.linalg.norm(rj))/(np.linalg.norm(r_old)))
+            beta_j = np.square(np.linalg.norm(rj))/np.square(np.linalg.norm(r_old))
             dj = -rj + (beta_j * dj)
 
-        if not cfail:
-            dk = xj - xp
-        else:
+        if cfail and veryfirsttry:
             dk = -f.gradient(xp)
+            
+        else:
+            dk = xj - xp
 
         tk = PB.projectedBacktrackingSearch(f, P, xp, dk)
         xp = P.project(xp + (tk * dk))
 
         intterm = xp - P.project(xp - f.gradient(xp))
-
         minval = np.min((0.5,(np.sqrt(np.linalg.norm(intterm)))))
+
         n = (minval) * np.linalg.norm(intterm)
 
         countIter = countIter +1
